@@ -11,10 +11,22 @@
             margin: auto;
             border: 1px solid black;
         }
+        #leaderboard {
+            font-family: Arial, sans-serif;
+            list-style-type: none;
+            padding: 0;
+        }
     </style>
 </head>
 <body>
+    <input type="text" id="playerName" placeholder="Enter your name">
+    <button onclick="startGame()">Start Game</button>
     <canvas id="game" width="400" height="400"></canvas>
+
+    <h3>Leaderboard</h3>
+    <ol id="leaderboard">
+        <!-- Leaderboard entries will go here -->
+    </ol>
 
     <script src="chicken-game.js"></script>
 </body>
