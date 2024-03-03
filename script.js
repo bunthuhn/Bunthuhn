@@ -1,10 +1,11 @@
 const canvas = document.getElementById('game');
 const ctx = canvas.getContext('2d');
-const scale = 10;
+const scale = 20; // This is the size of each 'cell' in the game
 const rows = canvas.height / scale;
 const columns = canvas.width / scale;
 
 let chicken;
+let seed;
 
 (function setup() {
     chicken = new Chicken();
@@ -39,21 +40,23 @@ function Chicken() {
     this.tail = [];
 
     this.draw = function() {
-        ctx.fillStyle = "#FFD700"; // Golden color for the chicken.
-
         for (let i=0; i<this.tail.length; i++) {
+            ctx.fillStyle = "#FFD700"; // Yellow color for the chicken's tail.
             ctx.fillRect(this.tail[i].x, this.tail[i].y, scale, scale);
         }
 
-        ctx.fillRect(this.x, this.y, scale, scale); // Head of the chicken.
-    }
+        ctx.fillStyle = "#FFD700"; // Yellow color for the chicken's head.
+        ctx.fillRect(this.x, this.y, scale, scale);
+    };
 
     this.update = function() {
         for (let i=0; i<this.tail.length - 1; i++) {
             this.tail[i] = this.tail[i+1];
         }
 
-        this.tail[this.total - 1] = { x: this.x, y: this.y };
+        if (this.total >= 1) {
+            this.tail[this.total - 1] = { x: this.x, y: this.y };
+        }
 
         this.x += this.xSpeed;
         this.y += this.ySpeed;
@@ -73,18 +76,45 @@ function Chicken() {
         if (this.y < 0) {
             this.y = canvas.height - scale;
         }
-    }
+    };
 
     this.changeDirection = function(direction) {
-        // Your direction code here.
-    }
+        switch(direction) {
+            case 'Up':
+                this.xSpeed = 0;
+                this.ySpeed = -scale * 1;
+                break;
+            case 'Down':
+                this.xSpeed = 0;
+                this.ySpeed = scale * 1;
+                break;
+            case 'Left':
+                this.xSpeed = -scale * 1;
+                this.ySpeed = 0;
+                break;
+            case 'Right':
+                this.xSpeed = scale * 1;
+                this.ySpeed = 0;
+                break;
+        }
+    };
 
     this.eat = function(seed) {
-        // Your eat code here.
-    }
+        if (this.x === seed.x && this.y === seed.y) {
+            this.total++;
+            return true;
+        }
+
+        return false;
+    };
 
     this.checkCollision = function() {
-        // Your collision code here.
+        for (var i=0; i<this.tail.length; i++) {
+            if (this.x === this.tail[i].x && this.y === this.tail[i].y) {
+                this.total = 0;
+                this.tail = [];
+            }
+        }
     }
 }
 
@@ -93,9 +123,9 @@ function Seed() {
     this.y;
 
     this.pickLocation = function() {
-        this.x = (Math.floor(Math.random() * columns) * scale);
-        this.y = (Math.floor(Math.random() * rows) * scale);
-    }
+        this.x = (Math.floor(Math.random() * columns - 1) + 1) * scale;
+        this.y = (Math.floor(Math.random() * rows - 1) + 1) * scale;
+    };
 
     this.draw = function() {
         ctx.fillStyle = "#8B4513"; // Brown color for the seeds.
