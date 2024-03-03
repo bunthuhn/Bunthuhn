@@ -20,7 +20,7 @@
 </head>
 <body>
     <input type="text" id="playerName" placeholder="Enter your name">
-    <button onclick="startGame()">Start Game</button>
+    <button id="startButton">Start Game</button>
     <canvas id="game" width="400" height="400"></canvas>
 
     <h3>Leaderboard</h3>
@@ -29,5 +29,8 @@
     </ol>
 
     <script src="chicken-game.js"></script>
+    <script>
+        document.getElementById('startButton').addEventListener('click', startGame);
+    </script>
 </body>
 </html>
