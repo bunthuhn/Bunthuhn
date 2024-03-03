@@ -112,4 +112,71 @@ function Chicken() {
             this.x = 0;
         }
 
-        if
+        if (this.y >= canvas.height) {
+            this.y = 0;
+        }
+
+        if (this.x < 0) {
+            this.x = canvas.width;
+        }
+
+        if (this.y < 0) {
+            this.y = canvas.height;
+        }
+    };
+
+    this.changeDirection = function(direction) {
+        switch (direction) {
+            case 'Up':
+                this.xSpeed = 0;
+                this.ySpeed = -scale * 1;
+                break;
+            case 'Down':
+                this.xSpeed = 0;
+                this.ySpeed = scale * 1;
+                break;
+            case 'Left':
+                this.xSpeed = -scale * 1;
+                this.ySpeed = 0;
+                break;
+            case 'Right':
+                this.xSpeed = scale * 1;
+                this.ySpeed = 0;
+                break;
+        }
+    };
+
+    this.eat = function(seed) {
+        if (this.x === seed.x && this.y === seed.y) {
+            this.total++;
+            return true;
+        }
+
+        return false;
+    };
+
+    this.checkCollision = function() {
+        for (var i = 0; i < this.tail.length; i++) {
+            if (this.x === this.tail[i].x && this.y === this.tail[i].y) {
+                this.total = 0;
+                this.tail = [];
+                updateLeaderboard(); // Update leaderboard on collision
+                score = 0; // Reset score on collision
+            }
+        }
+    }
+}
+
+function Seed() {
+    this.x;
+    this.y;
+
+    this.pickLocation = function() {
+        this.x = (Math.floor(Math.random() * columns) * scale);
+        this.y = (Math.floor(Math.random() * rows) * scale);
+    };
+
+    this.draw = function() {
+        ctx.drawImage(seedImage, this.x, this.y, scale, scale);
+    }
+}
