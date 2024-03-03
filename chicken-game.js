@@ -13,8 +13,8 @@ let score = 0;
 let interval;
 let playerName = '';
 
-chickenImage.src = 'chicken.png';
-seedImage.src = 'seed.png';
+chickenImage.src = 'chicken.png'; // Update the path if necessary
+seedImage.src = 'seed.png';       // Update the path if necessary
 
 chickenImage.addEventListener('load', imageLoaded);
 chickenImage.addEventListener('error', imageError);
@@ -82,12 +82,34 @@ function updateLeaderboard() {
 }
 
 function Chicken() {
-    // ... (rest of the Chicken class)
-    // Add 'this.checkCollision' in the 'update' method of the Chicken class
-}
+    this.x = 0;
+    this.y = 0;
+    this.xSpeed = scale * 1;
+    this.ySpeed = 0;
+    this.total = 0;
+    this.tail = [];
 
-function Seed() {
-    // ... (rest of the Seed class)
-}
+    this.draw = function() {
+        for (let i = 0; i < this.tail.length; i++) {
+            ctx.drawImage(chickenImage, this.tail[i].x, this.tail[i].y, scale, scale);
+        }
+        ctx.drawImage(chickenImage, this.x, this.y, scale, scale);
+    };
 
-// ... (rest of the code)
+    this.update = function() {
+        for (let i = 0; i < this.tail.length - 1; i++) {
+            this.tail[i] = this.tail[i + 1];
+        }
+
+        if (this.total >= 1) {
+            this.tail[this.total - 1] = { x: this.x, y: this.y };
+        }
+
+        this.x += this.xSpeed;
+        this.y += this.ySpeed;
+
+        if (this.x >= canvas.width) {
+            this.x = 0;
+        }
+
+        if
