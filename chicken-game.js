@@ -13,18 +13,24 @@ let imagesLoaded = 0;
 function imageLoaded() {
     imagesLoaded++;
     if (imagesLoaded === 2) {
-        // Start the game when both images have loaded
         setup();
     }
 }
 
-// Load images and set up the game
-chickenImage.src = 'chicken.png'; // Make sure this is the path to your chicken image
-seedImage.src = 'seed.png';       // Make sure this is the path to your seed image
+function imageError(e) {
+    console.error("Error loading image: ", e.target.src);
+    // You can handle the error more gracefully here, like setting a fallback image
+}
 
 // Set up event listeners for when the images have loaded
 chickenImage.addEventListener('load', imageLoaded);
+chickenImage.addEventListener('error', imageError);
 seedImage.addEventListener('load', imageLoaded);
+seedImage.addEventListener('error', imageError);
+
+// Set the source files for the images
+chickenImage.src = 'chicken.png'; // Make sure this is the path to your chicken image
+seedImage.src = 'seed.png';       // Make sure this is the path to your seed image
 
 function setup() {
     chicken = new Chicken();
@@ -59,15 +65,15 @@ function Chicken() {
     this.tail = [];
 
     this.draw = function() {
-        for (let i=0; i<this.tail.length; i++) {
+        for (let i = 0; i < this.tail.length; i++) {
             ctx.drawImage(chickenImage, this.tail[i].x, this.tail[i].y, scale, scale);
         }
         ctx.drawImage(chickenImage, this.x, this.y, scale, scale);
     };
 
     this.update = function() {
-        for (let i=0; i<this.tail.length - 1; i++) {
-            this.tail[i] = this.tail[i+1];
+        for (let i = 0; i < this.tail.length - 1; i++) {
+            this.tail[i] = this.tail[i + 1];
         }
 
         if (this.total >= 1) {
@@ -95,7 +101,7 @@ function Chicken() {
     };
 
     this.changeDirection = function(direction) {
-        switch(direction) {
+        switch (direction) {
             case 'Up':
                 this.xSpeed = 0;
                 this.ySpeed = -scale * 1;
@@ -125,7 +131,7 @@ function Chicken() {
     };
 
     this.checkCollision = function() {
-        for (var i=0; i<this.tail.length; i++) {
+        for (var i = 0; i < this.tail.length; i++) {
             if (this.x === this.tail[i].x && this.y === this.tail[i].y) {
                 this.total = 0;
                 this.tail = [];
@@ -139,8 +145,8 @@ function Seed() {
     this.y;
 
     this.pickLocation = function() {
-        this.x = (Math.floor(Math.random() * columns - 1) + 1) * scale;
-        this.y = (Math.floor(Math.random() * rows - 1) + 1) * scale;
+        this.x = (Math.floor(Math.random() * columns) * scale);
+        this.y = (Math.floor(Math.random() * rows) * scale);
     };
 
     this.draw = function() {
