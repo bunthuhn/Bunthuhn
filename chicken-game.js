@@ -34,8 +34,9 @@ function imageError(e) {
 
 function startGame() {
     playerName = document.getElementById('playerName').value || 'Anonymous';
-    if (interval) clearInterval(interval);
+    resetGame();
     score = 0;
+    updateScoreDisplay();
     chicken = new Chicken();
     seed = new Seed();
     seed.pickLocation();
@@ -45,10 +46,10 @@ function startGame() {
         seed.draw();
         chicken.update();
         chicken.draw();
-        drawScore();
 
         if (chicken.eat(seed)) {
             score++;
+            updateScoreDisplay();
             seed.pickLocation();
         }
 
@@ -56,15 +57,18 @@ function startGame() {
     }, 250);
 }
 
+function resetGame() {
+    if (interval) clearInterval(interval);
+    interval = null;
+}
+
 window.addEventListener('keydown', ((evt) => {
     const direction = evt.key.replace('Arrow', '');
     chicken.changeDirection(direction);
 }));
 
-function drawScore() {
-    ctx.fillStyle = 'black';
-    ctx.font = '20px Arial';
-    ctx.fillText('Score: ' + score, scale, scale);
+function updateScoreDisplay() {
+    document.getElementById('score').textContent = 'Score: ' + score;
 }
 
 function updateLeaderboard() {
@@ -161,7 +165,8 @@ function Chicken() {
                 this.total = 0;
                 this.tail = [];
                 updateLeaderboard(); // Update leaderboard on collision
-                score = 0; // Reset score on collision
+                resetGame(); // Stop the game
+                break;
             }
         }
     }
